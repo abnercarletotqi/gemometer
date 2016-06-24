@@ -70,12 +70,21 @@ module Gemometer
         parser.parse
         gems = @options.listed_only ? parser.gems.listed : parser.gems
 
-        Gemometer::Notifiers.const_get(@options.notifier.capitalize).new(
-          gems: gems,
-          url: @options.url
-        ).notify
+        notify_while_not_empty(gems)
       rescue Gemometer::NotifyError => e
         abort(e.message)
+      end
+    end
+
+    private
+
+    def self.notify_while_not_empty(gems)
+      while !gems.empty?
+        Gemometer::Notifiers.const_get(@options.notifier.capitalize).new(
+          gems: gems.take(Gemometer::REQUEST_GEM_SIZE),
+          url: @options.url
+        ).notify
+        gems = gems.drop(Gemometer::REQUEST_GEM_SIZE)
       end
     end
   end

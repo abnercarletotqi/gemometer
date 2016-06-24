@@ -4,9 +4,9 @@ describe Gemometer::Notifiers::Hipchat do
 
   let(:gems) do
     [
-      { name: 'aws-sdk', newest: '2.1.32', installed: '1.66.0', requested: '= 1.66.0', group: 'default' },
-      { name: 'byebug', newest: '6.0.2', installed: '5.0.0'},
-      { name: 'rspec-rails', newest: '0.10.3', installed: '0.10.2'}
+      Gemometer::Gem.new({ name: 'aws-sdk', newest: '2.1.32', installed: '1.66.0', requested: '= 1.66.0', group: 'default' }),
+      Gemometer::Gem.new({ name: 'byebug', newest: '6.0.2', installed: '5.0.0'}),
+      Gemometer::Gem.new({ name: 'rspec-rails', newest: '0.10.3', installed: '0.10.2'})
     ]
   end
   let(:success_url) { 'https://api.hipchat.com/v2/room/806888/notification?auth_token=bLalUcXYzVnAgmZ2ca67fyp5BHRLg0wWLqjpvAmB' }

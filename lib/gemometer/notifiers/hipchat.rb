@@ -5,9 +5,9 @@ module Gemometer
       def message
         html = '<p>Outdated gems:</p><ul>'
         gems.each do |g|
-          html += "<li><a href='https://rubygems.org/gems/#{g[:name]}'>#{g[:name]}</a> (newest #{g[:newest]}, installed #{g[:installed]}"
-          html += g[:requested] ? ", requested: #{g[:requested]})" : ")"
-          html +=  " in group \"#{g[:group]}\"" if g[:group]
+          html += "<li><a href='https://rubygems.org/gems/#{g.name}'>#{g.name}</a> (newest #{g.newest}, installed #{g.installed}"
+          html += g.requested ? ", requested: #{g.requested})" : ")"
+          html +=  " in group \"#{g.group}\"" if g.group
           html += "</li>"
         end
         html += '</ul>'

@@ -4,7 +4,18 @@ require 'gemometer/cli'
 describe Gemometer::CLI do
 
   describe '.notify' do
-    let(:gems)     { instance_double(Gemometer::GemArray, listed: instance_double(Gemometer::GemArray)) }
+    let(:gems) do
+      arr = Gemometer::GemArray.new
+      10.times { arr << instance_double(Gemometer::Gem, group: nil) }
+      3.times { arr << instance_double(Gemometer::Gem, group: [:development, :test]) }
+      arr
+    end
+    # let(:gems)     { instance_double(Gemometer::GemArray, {
+    #   listed: gems,
+    #   empty?: false,
+    #   take: instance_double(Gemometer::GemArray),
+    #   drop: instance_double(Gemometer::GemArray, empty?: true)
+    # }) }
     let(:parser)   { instance_double(Gemometer::Parser, parse: true, gems: gems) }
 
     before(:each) do
@@ -26,7 +37,7 @@ describe Gemometer::CLI do
 
         it 'must notify with all gems' do
           expect(Gemometer::Notifiers::Hipchat).to receive(:new).
-            with(gems: gems, url: 'http://foo.br').and_call_original
+            with(gems: gems.take(Gemometer::REQUEST_GEM_SIZE), url: 'http://foo.br').and_call_original
         end
       end
 
@@ -35,7 +46,7 @@ describe Gemometer::CLI do
 
         it 'must notify with only the gems listed on Gemfile' do
           expect(Gemometer::Notifiers::Hipchat).to receive(:new).
-            with(gems: gems.listed, url: 'http://foo.br').and_call_original
+            with(gems: gems.listed.take(Gemometer::REQUEST_GEM_SIZE), url: 'http://foo.br').and_call_original
         end
       end
     end
